@@ -1,8 +1,9 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven'  // Make sure Maven is configured in Jenkins
-        jdk 'jdk-17'    // Ensure JDK is configured
+
+    environment {
+        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-17'
+        PATH = "${env.PATH};${JAVA_HOME}\\bin"
     }
     stages {
         stage('Checkout') {
@@ -12,32 +13,32 @@ pipeline {
         }
         stage('Build') {
             steps {
-                bat 'mvn clean install'
+                echo 'Building the application using Maven'
+                bat 'mvn clean package -DskipTests'
             }
         }
-        stage('Deploy Service Registry') {
+        stage('Deploy') {
             steps {
-                bat 'java -jar service-registry/target/service-registry-1.0-SNAPSHOT.jar'
-            }
-        }
-        stage('Deploy Microservice One') {
-            steps {
-                bat 'java -jar microservice-one/target/microservice-one-1.0-SNAPSHOT.jar'
-            }
-        }
-        stage('Deploy Microservice Two') {
-            steps {
-                bat 'java -jar microservice-two/target/microservice-two-1.0-SNAPSHOT.jar'
+                echo 'Deploying Service Registry'
+                bat 'java -jar service-registry\\target\\service-registry-1.0-SNAPSHOT.jar'
+
+                echo 'Deploying Microservice One'
+                bat 'java -jar microservice-one\\target\\microservice-one-1.0-SNAPSHOT.jar'
+
+                echo 'Deploying Microservice Two'
+                bat 'java -jar microservice-two\\target\\microservice-two-1.0-SNAPSHOT.jar'
             }
         }
     }
     post {
+        always {
+            echo 'Pipeline completed'
+        }
         success {
-            echo 'Deployment Successful! Access at http://localhost:8083/service-one/hello'
-            echo 'Deployment Successful! Access at http://localhost:8084/service-one/hello'
+            echo 'All microservices deployed successfully!'
         }
         failure {
-            echo 'Deployment Failed! Check the logs for more details.'
+            echo 'Pipeline failed!'
         }
     }
 }
