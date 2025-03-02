@@ -33,8 +33,8 @@ pipeline {
     }
     post {
         success {
-            echo 'Deployment Successful! Access at http://localhost:8762/service-one/hello'
-            echo 'Deployment Successful! Access at http://localhost:8763/service-one/hello'
+            echo 'Deployment Successful! Access at http://localhost:8083/service-one/hello'
+            echo 'Deployment Successful! Access at http://localhost:8084/service-one/hello'
         }
         failure {
             echo 'Deployment Failed! Check the logs for more details.'
