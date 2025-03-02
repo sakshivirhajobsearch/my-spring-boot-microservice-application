@@ -1,5 +1,10 @@
 server:
-  port: 8083
+  port: 8084
+
+spring:
+  application:
+    name: microservice-two
+
 eureka:
   client:
     service-url:
