@@ -1,29 +1,23 @@
 package com.example.microserviceone;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ControllerTest {
-
-	@LocalServerPort
-	private int port;
+@WebMvcTest(Controller.class)
+class ControllerTest {
 
 	@Autowired
-	private TestRestTemplate restTemplate;
+	private MockMvc mockMvc;
 
 	@Test
-	void helloEndpointShouldReturnExpectedMessage() {
-		String url = "http://localhost:" + port + "/service-one/hello";
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-
-		assertThat(response.getStatusCodeValue()).isEqualTo(200);
-		assertThat(response.getBody()).isEqualTo("Hello from Microservice One!");
+	void helloEndpointShouldReturnExpectedMessage() throws Exception {
+		mockMvc.perform(get("/service-one/hello")).andExpect(status().isOk())
+				.andExpect(content().string("Hello from Microservice One!"));
 	}
 }
