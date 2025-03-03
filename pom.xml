@@ -10,7 +10,7 @@
 
 	<modules>
 		<module>service-registry</module>
-		<module>apigatewayapplication</module>
+		<module>api-gateway</module>
 		<module>microservice-one</module>
 		<module>microservice-two</module>
 	</modules>

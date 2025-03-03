@@ -10,7 +10,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>apigatewayapplication</artifactId>
+	<artifactId>api-gateway</artifactId>
 
 	<dependencyManagement>
 		<dependencies>
