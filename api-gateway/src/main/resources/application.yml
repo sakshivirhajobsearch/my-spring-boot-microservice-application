@@ -1,26 +1,11 @@
 server:
   port: 8082
-  address: 0.0.0.0
-
 
 spring:
   application:
-    name: apigatewayapplication
-
-  cloud:
-    gateway:
-      routes:
-        - id: microservice-one
-          uri: lb://MICROSERVICE-ONE
-          predicates:
-            - Path=/service-one/**
-        - id: microservice-two
-          uri: lb://MICROSERVICE-TWO
-          predicates:
-            - Path=/service-two/**
+    name: api-gateway
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-
