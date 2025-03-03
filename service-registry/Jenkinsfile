@@ -1,0 +1,18 @@
+pipeline {
+    agent any
+
+    environment {
+        SERVICE_NAME = 'service-registry'
+        SERVICE_PORT = 8761
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/sakshivirhajobsearch/my-spring-boot-microservice-application.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'm

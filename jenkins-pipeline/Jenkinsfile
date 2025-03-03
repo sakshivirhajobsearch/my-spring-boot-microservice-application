@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/sakshivirhajobsearch/my-spring-boot-microservice-application.git'
+            }
+        }
+
+        stage('Build All Services') {
+            steps {
+                sh '''
+                cd service-registry && mvn clean package -DskipTests
+                cd ../api-gateway && mvn clean package -DskipTests
+                cd ../microservice-one && mvn clean package -DskipTests
+                cd ../microservice-two && mvn clean package -DskipTests
+                '''
+            }
+        }
+
+        stage('Test All Services') {
+            steps {
+                sh '''
+                cd service-registry && mvn test
+                cd ../api-gateway && mvn test
+                cd ../microservice-one && mvn test
+                cd ../microservice-two && mvn test
+                '''
+            }
+        }
+
+        stage('Deploy All Services') {
+            steps {
+                sh '''
+                # Function to kill processes on a port
+                function killPort() {
+                    PORT=$1
+                    PIDS=$(netstat -ano | findstr ":$PORT" | awk '{print $5}')
+                    for PID in $PIDS; do
+                        taskkill /PID $PID /F
+                    done
+                }
+
+                killPort 8761
+                start "service-registry" cmd /c "java -jar service-registry/target/service-registry-*.jar"
+
+                killPort 8082
+                start "api-gateway" cmd /c "java -jar api-gateway/target/api-gateway-*.jar"
+
+                killPort 8083
+                start "microservice-one" cmd /c "java -jar microservice-one/target/microservice-one-*.jar"
+
+                killPort 8084
+                start "microservice-two" cmd /c "java -jar microservice-two/target/microservice-two-*.jar"
+                '''
+            }
+        }
+    }
+}

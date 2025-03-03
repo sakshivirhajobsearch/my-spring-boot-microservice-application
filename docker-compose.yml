@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  service-registry:
+    build:
+      context: ./service-registry
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices-net
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "8082:8082"
+    depends_on:
+      - service-registry
+    networks:
+      - microservices-net
+
+  microservice-one:
+    build:
+      context: ./microservice-one
+    ports:
+      - "8083:8083"
+    depends_on:
+      - service-registry
+    networks:
+      - microservices-net
+
+  microservice-two:
+    build:
+      context: ./microservice-two
+    ports:
+      - "8084:8084"
+    depends_on:
+      - service-registry
+    networks:
+      - microservices-net
+
+networks:
+  microservices-net:
