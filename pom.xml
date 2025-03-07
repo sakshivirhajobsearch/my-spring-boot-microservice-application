@@ -15,7 +15,7 @@
 		<module>microservice-one-service</module>
 		<module>microservice-two-service</module>
 		<module>security-service</module>
-		<!--<module>logging-service</module>-->
+		<module>logging-service</module>
 	</modules>
 
 	<dependencyManagement>
