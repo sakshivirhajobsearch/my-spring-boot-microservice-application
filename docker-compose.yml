@@ -1,0 +1,88 @@
+### docker-compose.yml
+
+version: '3.8'
+
+services:
+
+  service-registry:
+    build: ./service-registry
+    ports:
+      - "8761:8761"
+    networks:
+      - my-network
+
+  config-server:
+    build: ./config-server
+    ports:
+      - "8888:8888"
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://service-registry:8761/eureka/
+    depends_on:
+      - service-registry
+    networks:
+      - my-network
+
+  api-gateway-service:
+    build: ./api-gateway-service
+    ports:
+      - "9000:9000"
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://service-registry:8761/eureka/
+      - spring.cloud.config.uri=http://config-server:8888
+    depends_on:
+      - service-registry
+      - config-server
+    networks:
+      - my-network
+
+  microservice-one-service:
+    build: ./microservice-one-service
+    ports:
+      - "9001:9001"
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://service-registry:8761/eureka/
+      - spring.cloud.config.uri=http://config-server:8888
+    depends_on:
+      - service-registry
+      - config-server
+      - api-gateway-service
+    networks:
+      - my-network
+
+  microservice-two-service:
+    build: ./microservice-two-service
+    ports:
+      - "9002:9002"
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://service-registry:8761/eureka/
+      - spring.cloud.config.uri=http://config-server:8888
+    depends_on:
+      - service-registry
+      - config-server
+      - api-gateway-service
+    networks:
+      - my-network
+
+  security-service:
+    build: ./security-service
+    ports:
+      - "9003:9003"
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://service-registry:8761/eureka/
+      - spring.cloud.config.uri=http://config-server:8888
+    depends_on:
+      - service-registry
+      - config-server
+      - api-gateway-service
+    networks:
+      - my-network
+
+  logging-service:
+    build: ./logging-service
+    ports:
+      - "9004:9004"
+    environment:
+      - eureka.client.serviceUrl.defaultZone=http://service-registry:8761/eureka/
+      - spring.cloud.config.uri=http://config-server:8888
+    depends_on:
+      - service-registry
