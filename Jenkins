@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+    tools {
+        maven 'Maven'   // Ensure Maven is configured in Jenkins
+        jdk 'jdk-17'    // Ensure JDK 17 is configured in Jenkins
+    }
+    environment {
+        SPRING_BOOT_JAR = 'target/*.jar'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'added-new-module', url: 'https://github.com/sakshivirhajobsearch/my-spring-boot-microservice-application.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                bat 'mvn clean package -DskipTests'
+            }
+        }
+        stage('Open Firewall Ports') {
+            steps {
+                echo '✅ Opening firewall ports...'
+                bat 'netsh advfirewall firewall add rule name="Allow Port 8761" dir=in action=allow protocol=TCP localport=8761'
+                bat 'netsh advfirewall firewall add rule name="Allow Port 8888" dir=in action=allow protocol=TCP localport=8888'
+                bat 'netsh advfirewall firewall add rule name="Allow Port 9000" dir=in action=allow protocol=TCP localport=9000'
+                bat 'netsh advfirewall firewall add rule name="Allow Port 9001" dir=in action=allow protocol=TCP localport=9001'
+                bat 'netsh advfirewall firewall add rule name="Allow Port 9002" dir=in action=allow protocol=TCP localport=9002'
+                bat 'netsh advfirewall firewall add rule name="Allow Port 9003" dir=in action=allow protocol=TCP localport=9003'
+                bat 'netsh advfirewall firewall add rule name="Allow Port 9004" dir=in action=allow protocol=TCP localport=9004'
+                echo '✅ Firewall ports opened successfully.'
+            }
+        }
+        stage('Deploy Applications') {
+            steps {
+                script {
+                    def services = [
+                        [name: 'service-registry', port: 8761],
+						[name: 'config-server', port: 8888],
+						[name: 'api-gateway-service', port: 9000],
+						[name: 'microservice-one-service', port: 9001],
+						[name: 'microservice-two-service', port: 9002],
+						[name: 'security-service', port: 9003],
+						[name: 'logging-service', port: 9004]
+                    ]
+                    services.each {
+                        service -> bat """
+                        echo Starting ${service.name} on port ${service.port}
+                        start "" java -jar ${service.name}/target/${service.name}-*.jar --server.port=${service.port} --server.address=0.0.0.0
+                        """
+                        sleep(time: 5, unit: 'SECONDS')
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo '✅ All microservices deployed successfully!'
+        }
+        failure {
+            echo '❌ Deployment failed. Check logs in Jenkins.'
+        }
+    }
+}
