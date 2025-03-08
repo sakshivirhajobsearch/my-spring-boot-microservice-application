@@ -6,16 +6,26 @@
 	<parent>
 		<groupId>com.example</groupId>
 		<artifactId>my-spring-boot-microservice-application</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>config-server</artifactId>
+
+	<repositories>
+		<!--Add repository if your parent POM is in a custom location-->
+		<repository>
+			<id>sakshivirhajobsearch</id>
+			<url>
+				https://github.com/sakshivirhajobsearch/my-spring-boot-microservice-application.git</url>  <!--Use the correct	repository URL -->
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<version>3.2.2</version>   <!-- or your desired Spring Boot version -->
+			<!--<version>3.2.2</version>--> <!-- or your desired
+			Spring Boot version -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -55,4 +65,5 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
 </project>
