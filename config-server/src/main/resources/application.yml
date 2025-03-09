@@ -2,12 +2,16 @@ server:
   port: 8888
 
 spring:
+  application:
+    name: config-server
   cloud:
     config:
       server:
         git:
-          uri: https://github.com/example/config-repo
+          uri: https://github.com/sakshivirhajobsearch/my-spring-boot-microservice-application.git
+          clone-on-start: true
 
-  main:
-    web-application-type: servlet
-
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
