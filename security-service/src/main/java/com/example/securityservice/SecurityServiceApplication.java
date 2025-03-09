@@ -14,7 +14,7 @@ public class SecurityServiceApplication {
 		SpringApplication.run(SecurityServiceApplication.class, args);
 	}
 
-	@GetMapping("/login")
+	@GetMapping("/authenticate")
 	public String login(@RequestBody LoginRequest request) {
 		return "Welcome, " + request.getUsername();
 	}

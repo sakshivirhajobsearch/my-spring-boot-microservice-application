@@ -12,7 +12,7 @@ public class LoggingServiceApplication {
 		SpringApplication.run(LoggingServiceApplication.class, args);
 	}
 
-	@PostMapping("/log")
+	@PostMapping("/logging")
 	public String logMessage(@RequestBody String message) {
 		System.out.println("Log: " + message);
 		return "Message logged";
