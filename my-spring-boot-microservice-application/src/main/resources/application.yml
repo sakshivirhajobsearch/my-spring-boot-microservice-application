@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    hikari:
+      maximum-pool-size: '20'
+      minimum-idle: '5'
+    url: jdbc:mysql://localhost:3306/microservice
+    password: admin
+  jpa:
+    properties:
+      hibernate:
+        transaction:
+          jta:
+            platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
